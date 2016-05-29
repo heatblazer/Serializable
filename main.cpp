@@ -24,7 +24,8 @@ struct A {
 class B;
 class B {
 public:
-    B():m_int(100) {}
+    B():m_int(100) { }
+    ~B() { }
     int foo(){
         printf("FOO\n");
     }
