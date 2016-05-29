@@ -17,13 +17,22 @@ struct A {
     int     bigarr[128];
 };
 
-
+class B;
 class B {
 public:
 
     int foo(){
         printf("FOO\n");
     }
+    int setAndGet(int i)
+    {
+        if (i != m_int) {
+            m_int = i;
+        }
+        return m_int;
+    }
+
+
 private:
     int m_int ;
 };
@@ -43,28 +52,21 @@ int main(int argc, char *argv[])
     a.fp = fpp;
 
     B b;
+    b.setAndGet(2222222);
 
 
     Serializable<A> ser;
     Serializable<B> serb;
 
     // serialize to a file
-    ser.serialize(&a, "Aserialize");
+    //ser.serialize(&a, "Aserialize");
 
     // deserialize from object
     A& pa = ser.deserialize("Aserialize");
 
-
     // call a fiunction
     // if want to see the vars use debugging
     pa.fp(0);
-
-    serb.serialize(&b, "Bserialize");
-
-    B& pb = serb.deserialize("Bserialize");
-
-    pb.foo();
-
 
 
 
