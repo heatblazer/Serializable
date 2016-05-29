@@ -5,6 +5,8 @@
 
 using namespace std;
 
+
+// demonstarates a test object
 struct A {
     char name[64];
     int i;
@@ -15,10 +17,11 @@ struct A {
     int     bigarr[128];
 };
 
+
+// demonstrates a call to a function
 static int fpp(void* p)
 {
-    printf("AAAAAAAAAAAAAAAAAAAAA\n");
-    return 100;
+    printf("Called a function callback\n");
 }
 
 int main(int argc, char *argv[])
@@ -31,12 +34,15 @@ int main(int argc, char *argv[])
 
     Serializable<A> ser;
 
-
+    // serialize to a file
     ser.serialize(&a, "Aserialize");
 
+    // deserialize from object
     A& pa = ser.deserialize("Aserialize");
 
 
+    // call a fiunction
+    // if want to see the vars use debugging
     pa.fp(0);
 
 
