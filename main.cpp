@@ -18,6 +18,16 @@ struct A {
 };
 
 
+class B {
+public:
+
+    int foo(){
+        printf("FOO\n");
+    }
+private:
+    int m_int ;
+};
+
 // demonstrates a call to a function
 static int fpp(void* p)
 {
@@ -32,7 +42,11 @@ int main(int argc, char *argv[])
     a.vec4.w = a.vec4.x = a.vec4.y = a.vec4.z = 2.200;
     a.fp = fpp;
 
+    B b;
+
+
     Serializable<A> ser;
+    Serializable<B> serb;
 
     // serialize to a file
     ser.serialize(&a, "Aserialize");
@@ -44,6 +58,14 @@ int main(int argc, char *argv[])
     // call a fiunction
     // if want to see the vars use debugging
     pa.fp(0);
+
+    serb.serialize(&b, "Bserialize");
+
+    B& pb = serb.deserialize("Bserialize");
+
+    pb.foo();
+
+
 
 
     return 0;
