@@ -19,10 +19,11 @@ public:
         strcpy(m_filename, filename); // store the name
         // dump the class as pure array
         union dmp {
-            T member;
+            T* member;
             char c[sizeof(T)];
         };
         union dmp d;
+        d.member = (T*)ob;
         memcpy(d.c, ob, sizeof(T));
 
         for(int i=0; i < sizeof(T); i++) {
