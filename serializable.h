@@ -42,6 +42,9 @@ public:
         }
 
         char c[sizeof(T)]={0};
+        // also can use fgets
+        //fgets(c, sizeof(T), fp);
+
         int i = 0;
         while (i < sizeof(T)) {
             c[i] = (char)fgetc(fp);
