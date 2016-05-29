@@ -36,6 +36,10 @@ public:
     T&   deserialize(const char* fname)
     {
         FILE* fp = fopen(fname, "rb");
+        // added a check if file is open
+        if(!fp) {
+            return *(T*)0;
+        }
 
         char c[sizeof(T)]={0};
         int i = 0;
@@ -45,6 +49,8 @@ public:
         }
 
         m_object = (T*) c;
+        //added fix close
+        fclose(fp);
         return *m_object;
     }
 
