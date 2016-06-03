@@ -12,8 +12,13 @@ using namespace std;
 class A : public Serializable<A>
 {
 public:
-    A()  { }
-    ~A() { }
+    A() : Serializable(this)
+    {
+    }
+
+    ~A()
+    {
+    }
 
     //!TODO - remove it from the Serialize interface
     //! \brief callTestCustomFunction
@@ -50,7 +55,7 @@ private:
 int main(int argc, char *argv[])
 {
     A a;
-    a.registerType(&a);
+
 //    a.setStringArray("Ilian serializira obekta si");
 //    a.serialize("Aserialize.ser");
     A& tmp = a.deserialize("Aserialize.ser");

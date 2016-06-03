@@ -10,6 +10,11 @@ template <class T> class Serializable
 
 public:
 
+    Serializable(T* obj)
+    {
+        m_object = obj;
+    }
+
     virtual void callTestCustomFunction()  = 0;
     virtual void registerType(T* t)
     {
