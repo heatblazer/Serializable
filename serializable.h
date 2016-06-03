@@ -10,7 +10,13 @@ template <class T> class Serializable
 
 public:
 
-    bool serialize(const T* ob, const char* filename)
+    virtual void callTestCustomFunction()  = 0;
+    virtual void registerType(T* t)
+    {
+        m_object = t;
+    }
+
+    virtual bool serialize(const char* filename)
     {
         FILE* fp = fopen(filename, "wb");
         if(!fp) {
@@ -18,23 +24,19 @@ public:
         }
         strcpy(m_filename, filename); // store the name
         // dump the class as pure array
-        union dmp {
-            T* member;
-            char c[sizeof(T)];
-        };
-        union dmp d;
-        d.member = (T*)ob;
-        memcpy(d.c, ob, sizeof(T));
+        char dmp[sizeof(T)] = {0}; // set it to 0
+        memcpy(dmp, m_object, sizeof(T)); // copy all chars into the array
 
+        // set them into a the file
         for(int i=0; i < sizeof(T); i++) {
-            fprintf(fp, "%c", d.c[i]);
+            fprintf(fp, "%c", dmp[i]);
         }
 
         fclose(fp);
         return true;
     }
 
-    T&   deserialize(const char* fname)
+    virtual T&   deserialize(const char* fname)
     {
         FILE* fp = fopen(fname, "rb");
         // added a check if file is open
@@ -43,16 +45,15 @@ public:
         }
 
         char c[sizeof(T)]={0};
-        // also can use fgets
-        //fgets(c, sizeof(T), fp);
-
         int i = 0;
+        /*
         while (i < sizeof(T)) {
             c[i] = (char)fgetc(fp);
             i++;
-        }
+        }*/
+        fgets(c, sizeof(T), fp);
 
-        m_object = (T*) c;
+        m_object = (T*)c;
         //added fix close
         fclose(fp);
         return *m_object;
