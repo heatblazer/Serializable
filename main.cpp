@@ -3,77 +3,58 @@
 // test serializable
 #include "serializable.h"
 
+// C libs
+#include <stdio.h>
+#include <string.h> // for strcpy
+
 using namespace std;
 
-
-// demonstarates a test object
-struct A {
-    char name[64];
-    int i;
-    struct {
-        float x; float y; float z; float w;
-    } vec4;
-    int fp(void*)
-    {
-        printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-    }
-
-    int     bigarr[128];
-};
-
-class B;
-class B {
+class A : public Serializable<A>
+{
 public:
-    B():m_int(100) { }
-    ~B() { }
-    int foo(){
-        printf("FOO\n");
-    }
-    int setAndGet(int i)
+    A()  { }
+    ~A() { }
+
+    //!TODO - remove it from the Serialize interface
+    //! \brief callTestCustomFunction
+    //!
+    void callTestCustomFunction()
     {
-        if (i != m_int) {
-            m_int = i;
-        }
-        return m_int;
+        _foo();
     }
 
+
+    void setStringArray(const char* str)
+    {
+        strcpy(string_arr, str);
+    }
+
+
+    void printStrArray(void)
+    {
+        std::cout << string_arr << std::endl;
+    }
 
 private:
-    int m_int ;
+    void _foo()
+    {
+        std::cout << "A`s method" << std::endl;
+    }
+
+    int array[128];
+    char string_arr[256];
 };
 
-// demonstrates a call to a function
-static int fpp(void* p)
-{
-    printf("Called a function callback\n");
-}
+
 
 int main(int argc, char *argv[])
 {
     A a;
-    a.i = 1000;
-    strcpy(a.name, "ILIAN TREST");
-    a.vec4.w = a.vec4.x = a.vec4.y = a.vec4.z = 2.200;
-
-    B b;
-    b.setAndGet(2222222);
-
-
-    Serializable<A> ser;
-    Serializable<B> serb;
-
-    // serialize to a file
-//    ser.serialize(&a, "Aserialize");
-
-    // deserialize from object
-    A& pa = ser.deserialize("Aserialize");
-
-   // serb.serialize(&b, "Bserialize");
-    B& pb = serb.deserialize("Bserialize");
-    // call a fiunction
-    // if want to see the vars use debugging
-    pa.fp(0);
-    pb.foo();
+    a.registerType(&a);
+//    a.setStringArray("Ilian serializira obekta si");
+//    a.serialize("Aserialize.ser");
+    A& tmp = a.deserialize("Aserialize.ser");
+    tmp.printStrArray();
 
     return 0;
 }
